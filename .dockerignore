@@ -1,0 +1,13 @@
+target
+.git
+.gitignore
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*Test.java
+*Tests.java
+docs
+README.md

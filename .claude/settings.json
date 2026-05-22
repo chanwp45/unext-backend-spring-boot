@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "PowerShell(Set-Location \"d:\\\\AI Show Case\\\\unext-back-end-spring-boot\"; .\\\\mvnw.cmd spring-boot:run 2>&1 | Where-Object { $_ -match \"Started|ERROR|Exception|Tomcat started|port 8080|SchemaManagement|Flyway\" } | Select-Object -First 20)",
+      "PowerShell(Set-Location \"d:\\\\AI Show Case\\\\unext-back-end-spring-boot\"; .\\\\mvnw.cmd spring-boot:run 2>&1 | Where-Object { $_ -match \"Started UnextBackend|ERROR|COMPILATION|Exception encountered|Tomcat started\" } | Select-Object -First 15)"
+    ]
+  }
+}
