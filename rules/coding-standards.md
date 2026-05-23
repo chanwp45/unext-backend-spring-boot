@@ -141,9 +141,49 @@ Database
 
 - Use Java Records for immutable DTOs where possible (Java 16+)
 - Mark service classes `final` unless extension is explicitly needed
-- Use constructor injection only — no `@Autowired` on fields
+- Use `@Autowired` on fields for dependency injection — Spring will inject the bean automatically
+- Use `@Getter @Setter` (Lombok) on JPA entities — do **not** use `@Data` on entities (breaks JPA proxy equality)
+- Use `@Slf4j` (Lombok) for logging — never declare `Logger` manually
 - Use `Optional<T>` at repository return types — never return `null`
 - All public API methods in interfaces must have Javadoc
+
+### Lombok Annotation Guide (Spring Boot)
+
+| Annotation | Use on | Purpose |
+|------------|--------|---------|
+| `@Autowired` | Fields in `@Service`, `@RestController`, `@Component`, `@Configuration` | Spring injects the matching Bean automatically |
+| `@Data` + `@EqualsAndHashCode(onlyExplicitlyIncluded = true)` | `@Entity` classes | Replaces manual getter/setter/toString — ต้องใช้คู่กันเสมอเพื่อป้องกัน JPA lazy load infinite loop |
+| `@Slf4j` | Any class that logs | Injects `log` field — replaces `LoggerFactory.getLogger(...)` |
+| `@Builder` | DTOs, value objects | Enables builder pattern for complex object construction |
+
+```java
+// ✅ CORRECT — @Autowired field injection
+@Service
+public class UserService {
+    @Autowired private UserRepository userRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+}
+
+// ✅ CORRECT — Lombok entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)  // ป้องกัน lazy load infinite loop
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @EqualsAndHashCode.Include  // ใช้แค่ id เปรียบเทียบ
+    private UUID id;
+    private String email;
+    // @Data สร้าง getter/setter/toString/equals/hashCode อัตโนมัติ
+}
+
+// ✅ CORRECT — Lombok logging
+@Slf4j
+@Component
+public class JwtTokenProvider {
+    // uses log.debug(), log.error() etc.
+}
+```
 
 ---
 

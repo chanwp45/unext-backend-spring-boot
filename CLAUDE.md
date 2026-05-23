@@ -105,22 +105,66 @@
 ```
 src/main/java/com/[org]/[project]/
 ├── [module]/
-│   ├── controller/         # @RestController
-│   ├── service/            # @Service
-│   ├── repository/         # @Repository (JPA)
-│   ├── entity/             # @Entity
-│   ├── dto/                # Request/Response records
-│   └── exception/          # Module exceptions
+│   ├── controller/         # @RestController + @RequestMapping
+│   ├── service/            # @Service + @Autowired
+│   ├── repository/         # JpaRepository interface (@Repository ไม่ต้องใส่)
+│   ├── entity/             # @Entity + @Data + @EqualsAndHashCode
+│   ├── dto/                # Java Records (request/response)
+│   └── exception/          # Module-specific exceptions
 ├── shared/
-│   ├── config/             # @Configuration classes
-│   ├── exception/          # @ControllerAdvice
-│   ├── security/           # Spring Security config
+│   ├── config/             # @Configuration + @Bean
+│   ├── exception/          # @RestControllerAdvice
+│   ├── security/           # @Component + Spring Security
 │   └── util/
 src/main/resources/
 ├── application.yml
 ├── application-dev.yml
 └── application-prod.yml
 src/test/java/...           # Mirror of main structure
+```
+
+#### Spring Boot — Lombok Annotation Pattern
+```java
+// Controller
+@RestController
+@RequestMapping("/v1/users")
+@Tag(name = "users")
+public class UserController {
+    @Autowired private UserService userService;
+}
+
+// Service
+@Service
+public class UserService {
+    @Autowired private UserRepository userRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+}
+
+// Repository — ไม่ต้อง implement, Spring Data JPA สร้างให้
+public interface UserRepository extends JpaRepository<User, UUID> {
+    Optional<User> findByEmail(String email);
+}
+
+// Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+@Table(name = "users")
+public class User {
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
+    private UUID id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+}
+
+// Logging
+@Slf4j
+@Component
+public class SomeComponent {
+    // ใช้ log.info(), log.debug(), log.error() ได้เลย
+}
 ```
 
 #### .NET (C#)
@@ -152,6 +196,18 @@ src/test/java/...           # Mirror of main structure
 | No business logic in controllers | Controllers only parse input, delegate to service, return response |
 | Repository abstraction | Business logic must not know about the ORM/DB technology |
 | Secrets in env only | No hardcoded credentials, API keys, or connection strings in code |
+
+### Spring Boot Annotation Rules
+
+| Layer | Required Annotations | Notes |
+|-------|---------------------|-------|
+| Controller | `@RestController` `@RequestMapping` | inject ด้วย `@Autowired` |
+| Service | `@Service` | inject ด้วย `@Autowired` |
+| Repository | extends `JpaRepository` | ไม่ต้องใส่ `@Repository` |
+| Entity | `@Entity` `@Data` `@EqualsAndHashCode(onlyExplicitlyIncluded = true)` | ต้องใส่ `@EqualsAndHashCode.Include` บน `@Id` field |
+| Config | `@Configuration` `@Bean` | inject ด้วย `@Autowired` |
+| Filter/Component | `@Component` | inject ด้วย `@Autowired` |
+| Logging | `@Slf4j` | ใช้ `log.info/debug/error()` |
 
 ---
 

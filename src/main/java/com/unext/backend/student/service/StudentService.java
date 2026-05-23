@@ -13,6 +13,7 @@ import com.unext.backend.student.entity.Student;
 import com.unext.backend.student.entity.StudentStatus;
 import com.unext.backend.student.exception.StudentNotFoundException;
 import com.unext.backend.student.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,17 +29,9 @@ import java.util.Map;
 @Service
 public class StudentService {
 
-    private final StudentRepository studentRepository;
-    private final CurriculumRepository curriculumRepository;
-    private final AuditLogService auditLogService;
-
-    public StudentService(StudentRepository studentRepository,
-                          CurriculumRepository curriculumRepository,
-                          AuditLogService auditLogService) {
-        this.studentRepository = studentRepository;
-        this.curriculumRepository = curriculumRepository;
-        this.auditLogService = auditLogService;
-    }
+    @Autowired private StudentRepository studentRepository;
+    @Autowired private CurriculumRepository curriculumRepository;
+    @Autowired private AuditLogService auditLogService;
 
     /** Search students with optional keyword, status, curriculum, and admission year filters. */
     @Transactional(readOnly = true)

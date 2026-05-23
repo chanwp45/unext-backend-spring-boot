@@ -5,6 +5,7 @@ import com.unext.backend.faculty.dto.FacultyResponse;
 import com.unext.backend.faculty.repository.DepartmentRepository;
 import com.unext.backend.faculty.repository.FacultyRepository;
 import com.unext.backend.shared.exception.AppException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,8 @@ import java.util.List;
 @Service
 public class FacultyService {
 
-    private final FacultyRepository facultyRepository;
-    private final DepartmentRepository departmentRepository;
-
-    public FacultyService(FacultyRepository facultyRepository, DepartmentRepository departmentRepository) {
-        this.facultyRepository = facultyRepository;
-        this.departmentRepository = departmentRepository;
-    }
+    @Autowired private FacultyRepository facultyRepository;
+    @Autowired private DepartmentRepository departmentRepository;
 
     @Transactional(readOnly = true)
     public List<FacultyResponse> findAll() {

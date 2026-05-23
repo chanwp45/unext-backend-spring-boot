@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,13 +30,8 @@ import java.net.URI;
 @RequestMapping("/v1/students")
 public class StudentController {
 
-    private final StudentService studentService;
-    private final AuditLogService auditLogService;
-
-    public StudentController(StudentService studentService, AuditLogService auditLogService) {
-        this.studentService = studentService;
-        this.auditLogService = auditLogService;
-    }
+    @Autowired private StudentService studentService;
+    @Autowired private AuditLogService auditLogService;
 
     @Operation(summary = "F-S01: Search students")
     @GetMapping

@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -30,13 +31,8 @@ import java.net.URI;
 @RequestMapping("/v1/curricula")
 public class CurriculumController {
 
-    private final CurriculumService curriculumService;
-    private final AuditLogService auditLogService;
-
-    public CurriculumController(CurriculumService curriculumService, AuditLogService auditLogService) {
-        this.curriculumService = curriculumService;
-        this.auditLogService = auditLogService;
-    }
+    @Autowired private CurriculumService curriculumService;
+    @Autowired private AuditLogService auditLogService;
 
     @Operation(summary = "F-C01: Search/list curricula with filters")
     @GetMapping

@@ -106,6 +106,8 @@ describe('UserService', () => {
 
 ### Spring Boot / Java (JUnit 5 + Mockito)
 
+> `@Mock` + `@InjectMocks` ทำงานร่วมกับ `@Autowired` field injection ได้โดยตรง — Mockito inject mock เข้า field โดยอัตโนมัติ
+
 ```java
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -114,27 +116,28 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserService userService;
+    private UserService userService;  // Mockito inject @Mock เข้า @Autowired fields
 
     @Test
     void findById_shouldReturnUser_whenExists() {
-        // Arrange
-        User user = new User(1L, "test@example.com", "Test User");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Arrange — Entity ใช้ @Data จึงต้องสร้างด้วย setter หรือ builder
+        User user = new User();
+        user.setEmail("test@example.com");
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.of(user));
 
         // Act
-        UserDto result = userService.findById(1L);
+        UserResponse result = userService.findById(UUID.randomUUID());
 
         // Assert
         assertThat(result.email()).isEqualTo("test@example.com");
-        verify(userRepository).findById(1L);
+        verify(userRepository).findById(any(UUID.class));
     }
 
     @Test
     void findById_shouldThrow_whenNotFound() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(userRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.findById(999L))
+        assertThatThrownBy(() -> userService.findById(UUID.randomUUID()))
             .isInstanceOf(UserNotFoundException.class);
     }
 }

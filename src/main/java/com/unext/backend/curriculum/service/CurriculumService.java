@@ -17,6 +17,7 @@ import com.unext.backend.faculty.repository.FacultyRepository;
 import com.unext.backend.shared.exception.AppException;
 import com.unext.backend.shared.response.PagedData;
 import com.unext.backend.shared.response.PaginationMeta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -33,20 +34,10 @@ import java.util.Map;
 @Service
 public class CurriculumService {
 
-    private final CurriculumRepository curriculumRepository;
-    private final FacultyRepository facultyRepository;
-    private final DepartmentRepository departmentRepository;
-    private final AuditLogService auditLogService;
-
-    public CurriculumService(CurriculumRepository curriculumRepository,
-                             FacultyRepository facultyRepository,
-                             DepartmentRepository departmentRepository,
-                             AuditLogService auditLogService) {
-        this.curriculumRepository = curriculumRepository;
-        this.facultyRepository = facultyRepository;
-        this.departmentRepository = departmentRepository;
-        this.auditLogService = auditLogService;
-    }
+    @Autowired private CurriculumRepository curriculumRepository;
+    @Autowired private FacultyRepository facultyRepository;
+    @Autowired private DepartmentRepository departmentRepository;
+    @Autowired private AuditLogService auditLogService;
 
     /** Search/list curricula with optional filters and pagination. */
     @Transactional(readOnly = true)

@@ -134,7 +134,7 @@ public partial class CreateUsersTable : Migration
 Always prefer soft delete over hard delete for auditable entities:
 
 ```typescript
-// TypeORM
+// TypeORM (NestJS)
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -151,6 +151,37 @@ export class User {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
+}
+```
+
+```java
+// Spring Boot JPA — ใช้ @Data + @EqualsAndHashCode + @SQLRestriction
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+@Table(name = "users")
+@SQLRestriction("deleted_at IS NULL")   // auto-filter ทุก query
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include          // equals/hashCode ใช้แค่ id
+    private UUID id;
+
+    @Column(nullable = false, unique = true, length = 255)
+    private String email;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
+
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt = Instant.now();
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;          // null = active, non-null = soft deleted
+
+    @PreUpdate
+    void onUpdate() { this.updatedAt = Instant.now(); }
 }
 ```
 

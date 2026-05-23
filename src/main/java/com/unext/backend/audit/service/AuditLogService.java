@@ -5,6 +5,7 @@ import com.unext.backend.audit.entity.AuditLog;
 import com.unext.backend.audit.repository.AuditLogRepository;
 import com.unext.backend.shared.response.PagedData;
 import com.unext.backend.shared.response.PaginationMeta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
@@ -18,11 +19,7 @@ import java.util.Map;
 @Service
 public class AuditLogService {
 
-    private final AuditLogRepository auditLogRepository;
-
-    public AuditLogService(AuditLogRepository auditLogRepository) {
-        this.auditLogRepository = auditLogRepository;
-    }
+    @Autowired private AuditLogRepository auditLogRepository;
 
     /**
      * Records an audit event. Runs in a separate transaction so a business-layer

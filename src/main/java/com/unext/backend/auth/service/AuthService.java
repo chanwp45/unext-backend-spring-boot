@@ -8,6 +8,7 @@ import com.unext.backend.shared.exception.AppException;
 import com.unext.backend.shared.security.JwtTokenProvider;
 import com.unext.backend.user.entity.User;
 import com.unext.backend.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,21 +25,10 @@ public class AuthService {
 
     private static final int MAX_LOGIN_ATTEMPTS = 5;
 
-    private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
-
-    public AuthService(
-            UserRepository userRepository,
-            RefreshTokenRepository refreshTokenRepository,
-            JwtTokenProvider jwtTokenProvider,
-            PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired private UserRepository userRepository;
+    @Autowired private RefreshTokenRepository refreshTokenRepository;
+    @Autowired private JwtTokenProvider jwtTokenProvider;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     /**
      * Authenticates a user and returns access + refresh tokens.

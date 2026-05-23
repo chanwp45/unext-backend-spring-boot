@@ -70,3 +70,67 @@
 5. **Secrets from env only** — never hardcode credentials in generated code
 6. **Tests must mock at boundaries** — mock repository layer, not service internals
 7. **OpenAPI must be complete** — every endpoint needs `@ApiResponse` for 2xx and error codes
+
+---
+
+## Spring Boot — Required Annotation Pattern
+
+เมื่อ generate code สำหรับ Spring Boot ต้องใช้ annotation ต่อไปนี้เสมอ:
+
+### Dependency Injection
+```java
+// ✅ ใช้ @Autowired บน field เสมอ
+@Service
+public class UserService {
+    @Autowired private UserRepository userRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+}
+
+// ❌ ห้ามเขียน constructor inject ด้วยมือ
+// ❌ ห้ามใช้ @RequiredArgsConstructor
+```
+
+### Entity
+```java
+// ✅ ใช้ @Data + @EqualsAndHashCode เสมอ
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include   // ← ต้องมีเสมอบน @Id
+    private UUID id;
+}
+
+// ❌ ห้ามเขียน getter/setter เอง
+// ❌ ห้ามใช้ @Getter @Setter แยก
+```
+
+### Logging
+```java
+// ✅ ใช้ @Slf4j เสมอ
+@Slf4j
+@Service
+public class AuthService {
+    // ใช้ log.info(), log.debug(), log.warn(), log.error()
+}
+
+// ❌ ห้ามประกาศ Logger ด้วยมือ
+// private static final Logger log = LoggerFactory.getLogger(...);
+```
+
+### Annotation Summary Table
+
+| Class Type | Annotations ที่ต้องใส่ |
+|------------|----------------------|
+| Controller | `@RestController` `@RequestMapping("/v1/...")` `@Tag` |
+| Service | `@Service` |
+| Repository | Interface extends `JpaRepository<Entity, IdType>` |
+| Entity | `@Data` `@EqualsAndHashCode(onlyExplicitlyIncluded = true)` `@Entity` `@Table` |
+| Config | `@Configuration` |
+| Security Filter | `@Component` |
+| Logging (any class) | `@Slf4j` |
+| Field injection | `@Autowired` |
+| Primary Key | `@Id` `@EqualsAndHashCode.Include` |
