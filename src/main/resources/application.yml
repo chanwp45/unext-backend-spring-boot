@@ -4,9 +4,9 @@ spring:
   profiles:
     active: development
   datasource:
-    url: jdbc:postgresql://localhost:5432/unext_db
-    username: postgres
-    password: changeme
+    url: jdbc:postgresql://dpg-d88t73ml51nc73fspn30-a.singapore-postgres.render.com/bomb_test
+    username: bomb_test_user
+    password: gAZ9b0zRxYlVzpD1l8tZlRRbWMC48Tjx
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
