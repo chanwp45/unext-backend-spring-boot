@@ -13,7 +13,6 @@
 | Database | PostgreSQL 16 |
 | ORM / Data Layer | JPA / Hibernate + Flyway migrations |
 | Auth Strategy | JWT (access 15m + refresh 7d with rotation) |
-| Team Size | [TEAM_SIZE] |
 | Target Users | [TARGET_USERS] |
 | Launch Date | [TARGET_LAUNCH_DATE] |
 
