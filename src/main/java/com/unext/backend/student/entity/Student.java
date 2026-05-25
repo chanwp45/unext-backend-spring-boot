@@ -43,7 +43,7 @@ public class Student {
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "gender_type")
+    @Column(nullable = false, length = 10)
     private Gender gender;
 
     @Column(nullable = false, length = 50)
@@ -66,7 +66,7 @@ public class Student {
     private Integer admissionYear;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "student_status", nullable = false, columnDefinition = "student_status")
+    @Column(name = "student_status", nullable = false, length = 20)
     private StudentStatus studentStatus = StudentStatus.STUDYING;
 
     @Column(name = "guardian_name", length = 200)
