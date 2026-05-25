@@ -55,7 +55,7 @@ public class Curriculum {
     private String accreditationBody;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, columnDefinition = "curriculum_status")
     private CurriculumStatus status = CurriculumStatus.DRAFT;
 
     @Column(columnDefinition = "TEXT")
